@@ -1,3 +1,5 @@
+default_stages: [pre-commit]
+
 repos:
  - repo: local
 
@@ -8,16 +10,15 @@ repos:
    - id: ruff-format
      name: ruff-format
      description: Python code formatting.
-     stages: [commit]
      language: python
      entry: ruff format
      types: [python]
 
-   - id: ruff
-     name: ruff
-     stages: [commit]
+   - id: ruff check
+     name: ruff check
      language: python
-     entry: ruff
+     entry: ruff check .
+     args: [--fix, --exit-non-zero-on-fix]
      types: [python]
 
    # Code analysis
@@ -25,7 +26,6 @@ repos:
    - id: mypy
      name: mypy
      description: Performs static type checking of source code written in Python.
-     stages: [commit]
      language: python
      entry: mypy
      types: [python]
@@ -34,7 +34,6 @@ repos:
    - id: pylint
      name: pylint
      description: Performs static analysis of source code written in Python.
-     stages: [commit]
      language: python
      entry: pylint
      types: [python]
@@ -43,7 +42,6 @@ repos:
 
    - id: pytest
      name: pytest
-     stages: [commit]
      language: python
      entry: pytest
      types: [python]
@@ -51,7 +49,7 @@ repos:
 
    - id: pytest-cov
      name: pytest-cov
-     stages: [push]
+     stages: [pre-push]
      language: python
      entry: pytest
      types: [python]
