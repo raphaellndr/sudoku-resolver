@@ -6,6 +6,6 @@ PROJECT_ROOT="$(cd "$(dirname "$0")/..";pwd)"
 cd "$PROJECT_ROOT"
 
 echo "██████████████████████████████  mypy  ██████████████████████████████"
-poetry run mypy src/sudoku tests
+poetry run mypy src/sudoku_resolver tests
 echo "██████████████████████████████ pylint ██████████████████████████████"
-poetry run pylint src/sudoku tests
+poetry run pylint src/sudoku_resolver tests

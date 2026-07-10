@@ -8,15 +8,15 @@ cd "$PROJECT_ROOT"
 if [[ "$#" -gt 0 ]] && [[ "$1" = "check" ]]; then
     # Check only
 
-    echo "████████████████████████████   black   █████████████████████████████"
-    poetry run black --check src/sudoku tests
+    echo "████████████████████████ ruff format ███████████████████████████████"
+    poetry run ruff format --check src/sudoku_resolver tests
     echo "████████████████████████████   ruff   █████████████████████████████"
-    poetry run ruff check src
+    poetry run ruff check src/sudoku_resolver tests
 else
     # Reformat
 
-    echo "████████████████████████████   black   █████████████████████████████"
-    poetry run black src/sudoku tests
+    echo "████████████████████████ ruff format ███████████████████████████████"
+    poetry run ruff format src/sudoku_resolver tests
     echo "████████████████████████████   ruff   █████████████████████████████"
-    poetry run ruff src
+    poetry run ruff check --fix src/sudoku_resolver tests
 fi

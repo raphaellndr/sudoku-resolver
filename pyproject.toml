@@ -14,8 +14,8 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "~3.12"
-typer = "0.12.1"
 numpy = "2.2.4"
+click = "8.4.2"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "0.9.6"

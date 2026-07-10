@@ -1,31 +1,26 @@
 """Command line interface entrypoint."""
 
-from enum import Enum
 from time import time
 
-import typer
+import click
 
+from sudoku_resolver.algorithms import SolverConfig
 from sudoku_resolver.sudoku import Sudoku
 
-app = typer.Typer(no_args_is_help=True)
 
-
-class SudokuDifficulty(Enum):
-    """Enumeration of the available difficulties."""
-
-    EASY = "easy"
-    MEDIUM = "medium"
-    HARD = "hard"
-
-
-@app.command("solve", no_args_is_help=True)
-def solve_sudoku(file_path: str = typer.Argument(..., help="Path to sudoku file.")) -> None:
+@click.command(name="solve")
+@click.argument("file_path", type=click.Path(exists=True, dir_okay=False))
+@click.option("--no-ac3", is_flag=True, help="Disable the AC-3 preprocessing pass.")
+@click.option("--no-mrv", is_flag=True, help="Disable minimum-remaining-values cell selection.")
+@click.option("--no-lcv", is_flag=True, help="Disable least-constraining-value ordering.")
+def app(file_path: str, *, no_ac3: bool, no_mrv: bool, no_lcv: bool) -> None:
     """Solves a sudoku."""
+    config = SolverConfig(ac3=not no_ac3, mrv=not no_mrv, lcv=not no_lcv)
     sudoku = Sudoku.from_file(file_path)
     print(sudoku.humanize())
 
     start = time()
-    sudoku.solve()
+    sudoku.solve(config)
     sudoku.check_consistency()
     end = time() - start
 

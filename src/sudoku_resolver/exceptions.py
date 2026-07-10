@@ -22,6 +22,16 @@ class ConsistencyError(Exception):
         )
 
 
+class UnsolvableSudokuError(Exception):
+    """Unsolvable sudoku error.
+
+    Raised when a sudoku admits no solution.
+    """
+
+    def __str__(self) -> str:
+        return "Sudoku has no solution"
+
+
 class ValueAssignmentError(Exception):
     """Value assignment error.
 
