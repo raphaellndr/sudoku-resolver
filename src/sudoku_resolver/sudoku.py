@@ -8,6 +8,8 @@ from .algorithms import SolverConfig, backtracking
 from .exceptions import ConsistencyError, UnsolvableSudokuError
 from .grid import Grid
 
+__all__ = ["Sudoku"]
+
 
 class Sudoku:
     """Represents a Sudoku."""
@@ -137,4 +139,5 @@ class Sudoku:
             f.write(formatted)
 
     def __str__(self) -> str:
+        """Returns the humanized grid."""
         return self.humanize()

@@ -6,6 +6,8 @@ from numpy import typing as npt
 from .domains import Domains
 from .exceptions import ValueAssignmentError
 
+__all__ = ["Grid", "Index", "NEIGHBOURS"]
+
 type Index = tuple[int, int]
 
 

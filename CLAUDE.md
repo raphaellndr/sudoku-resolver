@@ -102,6 +102,7 @@ Data structures and algorithms are deliberately separated: `grid.py`/`domains.py
 ## Conventions
 
 - Docstring format lives in `.claude/rules/docstrings.md`.
+- Every module under `src/` declares an `__all__` listing its public names (classes, functions, and reused type aliases/constants), placed right after the imports and sorted ordinally (uppercase before lowercase, matching Python's default `sorted`). Omit private (`_`-prefixed) and purely-internal names. Exceptions: `__main__.py` (entrypoint, not imported for its API).
 - Sudoku file format: 9 lines of 9 characters, digits with `.` for empty cells (see `data/`).
 
 ## Key gotchas

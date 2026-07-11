@@ -5,6 +5,8 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from sudoku_resolver.grid import Index
 
+__all__ = ["Domains"]
+
 type Domain = set[int]
 
 

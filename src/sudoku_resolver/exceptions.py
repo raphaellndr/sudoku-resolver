@@ -5,6 +5,8 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .grid import Index
 
+__all__ = ["ConsistencyError", "UnsolvableSudokuError", "ValueAssignmentError"]
+
 
 class ConsistencyError(Exception):
     """Sudoku consistency error.
@@ -16,6 +18,7 @@ class ConsistencyError(Exception):
         self.value_index = value_index
 
     def __str__(self) -> str:
+        """Returns the error message."""
         return (
             f"Sudoku isn't consistent. Value at index '{self.value_index}' "
             "does't respect every constraint"
@@ -29,6 +32,7 @@ class UnsolvableSudokuError(Exception):
     """
 
     def __str__(self) -> str:
+        """Returns the error message."""
         return "Sudoku has no solution"
 
 
@@ -42,4 +46,5 @@ class ValueAssignmentError(Exception):
         self.value_index = value_index
 
     def __str__(self) -> str:
+        """Returns the error message."""
         return f"Failed to assign a value at given index '{self.value_index}'"
