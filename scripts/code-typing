@@ -2,8 +2,5 @@
 
 set -euo pipefail
 
-PROJECT_ROOT="$(cd "$(dirname "$0")/..";pwd)"
-cd "$PROJECT_ROOT"
-
 echo "██████████████████████████████  mypy  ██████████████████████████████"
-poetry run mypy src/sudoku_resolver tests
+poetry run mypy src/trevell/apps/api

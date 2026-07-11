@@ -1,0 +1,15 @@
+#!/bin/bash
+
+set -euo pipefail
+
+if [[ "$#" -gt 0 ]] && [[ "$1" = "check" ]]; then
+  # Check only
+  echo "████████████████████████████   ruff   █████████████████████████████"
+  poetry run ruff format --check src tests
+  poetry run ruff check --no-fix src tests
+else
+  # Reformat
+  echo "████████████████████████████   ruff   █████████████████████████████"
+  poetry run ruff format src tests
+  poetry run ruff check --fix src tests
+fi

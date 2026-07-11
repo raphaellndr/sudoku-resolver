@@ -2,11 +2,38 @@
 
 set -euo pipefail
 
-PROJECT_ROOT="$(cd "$(dirname "$0")/..";pwd)"
-cd "$PROJECT_ROOT"
+GENERATE_REPORT=true
+DRY_RUN=false
+PYTEST_ARGS=()
 
-PYTEST_OPTS="--junitxml=build/test-report.xml --html=build/test-report.html --self-contained-html"
+# Analyse des arguments
+for arg in "$@"; do
+  case "$arg" in
+    --no-report)
+      GENERATE_REPORT=false
+      ;;
+    --dry-run)
+      DRY_RUN=true
+      ;;
+    *)
+      PYTEST_ARGS+=("$arg")
+      ;;
+  esac
+done
+
+if [ "$GENERATE_REPORT" = true ]; then
+  PYTEST_ARGS+=(
+    "--junitxml=build/test-report.xml"
+    "--html=build/test-report.html"
+    "--self-contained-html"
+  )
+fi
+
+if [ "$DRY_RUN" = true ]; then
+  echo "[DRY-RUN] rm -f .coverage*"
+  echo "[DRY-RUN] poetry run pytest ${PYTEST_ARGS[*]}"
+  exit 0
+fi
 
 rm -f .coverage*
-
-poetry run pytest --cov
+poetry run pytest "${PYTEST_ARGS[@]}"
