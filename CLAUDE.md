@@ -78,11 +78,11 @@ Package manager is **Poetry** (in-project `.venv`). Helper scripts live in `scri
 - `poetry install` — install deps
 - `poetry run sudoku-resolver <file>` — solve a sudoku file (samples in `data/`; entrypoint `__main__.py` → `cli.py`, a single click command). `--no-ac3 / --no-mrv / --no-lcv` disable individual solving techniques (for benchmarking/comparison).
 - `scripts/codeformatting` — reformat; `scripts/codeformatting check` is check-only
-- `scripts/codeanalysis` — mypy + pylint
+- `scripts/codeanalysis` — mypy
 - `scripts/test` — pytest with coverage (`rm .coverage*` first); or `poetry run pytest` for a plain run
 - `scripts/build` — `poetry build`
 
-Git hooks (**pre-commit**): on commit, ruff format + `ruff check --fix` + mypy + pylint + pytest; on push, `pytest --cov`.
+Git hooks (**pre-commit**): on commit, ruff format + `ruff check --fix` + mypy + pytest; on push, `pytest --cov`.
 
 ## Architecture
 

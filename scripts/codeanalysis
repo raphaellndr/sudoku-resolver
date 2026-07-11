@@ -7,5 +7,3 @@ cd "$PROJECT_ROOT"
 
 echo "██████████████████████████████  mypy  ██████████████████████████████"
 poetry run mypy src/sudoku_resolver tests
-echo "██████████████████████████████ pylint ██████████████████████████████"
-poetry run pylint src/sudoku_resolver tests

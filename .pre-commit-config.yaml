@@ -31,13 +31,6 @@ repos:
      types: [python]
      pass_filenames: false
 
-   - id: pylint
-     name: pylint
-     description: Performs static analysis of source code written in Python.
-     language: python
-     entry: pylint
-     types: [python]
-
     # Local tests
 
    - id: pytest

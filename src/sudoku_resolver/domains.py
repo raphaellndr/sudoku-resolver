@@ -1,4 +1,4 @@
-"""Module containing the definition of a domain and its related methods"""
+"""Module containing the definition of a domain and its related methods."""
 
 from typing import TYPE_CHECKING
 
