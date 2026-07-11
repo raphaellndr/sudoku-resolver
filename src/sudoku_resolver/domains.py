@@ -1,11 +1,13 @@
-"""Module containing the definition of a domain and its related methods"""
+"""Module containing the definition of a domain and its related methods."""
 
-from typing import TYPE_CHECKING, TypeAlias
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from sudoku_resolver.grid import Index
 
-Domain: TypeAlias = set[int]
+__all__ = ["Domains"]
+
+type Domain = set[int]
 
 
 class Domains:
@@ -34,27 +36,3 @@ class Domains:
             error_msg = f"Tried to set a 'None' domain at '{domain_index}'"
             raise ValueError(error_msg)
         self.domains[domain_index[0]][domain_index[1]] = domain
-
-    def reinitialize_domain(
-        self, *, domain_index: "Index", initial_domains: list[list[Domain | None]]
-    ) -> None:
-        """Reinitializes the domain of a value.
-
-        :param domain_index: index of the domain to reinitialize.
-        :param initial_domains: starting domains values.
-        """
-        if self.get_domain(domain_index) is None:
-            return
-        domain = initial_domains[domain_index[0]][domain_index[1]]
-        self.set_domain(domain, domain_index)
-
-    def pop_value_from_domain(self, value: int, domain_index: "Index") -> None:
-        """Gets a value from a given domain and removes it.
-
-        :param value: value to pop. If no value is given, pops one from the domain.
-        :param domain_index: index of the domain to work on.
-        :returns: extracted value if domain is not empty, `None` otherwise.
-        """
-        if not self.get_domain(domain_index):
-            return
-        self.domains[domain_index[0]][domain_index[1]].remove(value)  # type:ignore

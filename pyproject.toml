@@ -1,49 +1,83 @@
 [build-system]
-requires = ["poetry-core>=1.5.0"]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.poetry]
+[project]
 name = "sudoku-resolver"
-version = "0.0.0"
+version = "0.1.0"
 description = "Solve sudokus using CSPs and Python."
-authors = ["raphaellndr"]
+authors = [
+    {name = "raphaellndr"}
+]
 readme = "README.md"
-packages = [
-    {include="sudoku_resolver", from="src"}
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "numpy (==2.2.4)",
+    "click (==8.4.2)",
 ]
 
-[tool.poetry.dependencies]
-python = "~3.12"
-typer = "0.12.1"
-numpy = "2.2.4"
-
-[tool.poetry.group.dev.dependencies]
-ruff = "0.9.6"
-pylint = "3.3.5"
-mypy = "1.15.0"
-pre-commit = "4.1.0"
-pytest = "8.3.5"
-pytest-cov = "6.0.0"
-
-[tool.poetry.scripts]
+[project.scripts]
 sudoku-resolver = "sudoku_resolver.__main__:main"
 
-[tool.pylint.basic]
-good-names = [
-    "i", "j", "k", "ex", "Run", "_", # Default names that come from the pylint configuration.
-    "x", "y", "z"
+[dependency-groups]
+dev = [
+    "ruff (==0.9.6)",
+    "mypy (==1.15.0)",
+    "pre-commit (==4.1.0)",
+    "pytest (==8.3.5)",
+    "pytest-cov (==6.0.0)",
 ]
 
-[tool.pylint.format]
-# Compatibility with black (source: https://black.readthedocs.io/en/stable/guides/using_black_with_other_tools.html#pylint)
-max-line-length = 100
-
-[tool.pylint.master]
-ignore = [".git", ".venv", "scripts"]
-ignore-patterns = "test_.*?py"
+[tool.poetry]
+packages = [
+    {include = "sudoku_resolver", from = "src"}
+]
 
 [tool.mypy]
 files = ["src/sudoku_resolver"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = [
+    # pycodestyle
+    "E",
+    # Pyflakes
+    "F",
+    # isort
+    "I",
+    # Pylint
+    "PL",
+    # pydocstyle
+    "D",
+    # flake8-print
+    "T20"
+]
+ignore = [
+    # Disable rule `D401` (`non-imperative-mood`)
+    "D401",
+    # Disable rule `D213` (`multi-line-summary-second-line`)
+    "D213",
+    # Disable rule `D203` (`incorrect-blank-line-before-class`)
+    "D203",
+    # Disable rule `D107` (`undocumented-public-init`)
+    "D107",
+    # Disable rule `D200` (`unnecessary-multiline-docstring`)
+    "D200"
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Ignore `D`, `PL` and `T20` rules everywhere except for the `src/` directory
+"!src/**.py" = [
+    "D",
+    "PL",
+    "T20"
+]
+
+[tool.ruff.lint.pylint]
+max-args = 8
 
 [tool.coverage.report]
 show_missing = true

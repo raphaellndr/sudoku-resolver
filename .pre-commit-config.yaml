@@ -1,56 +1,48 @@
 default_stages: [pre-commit]
 
 repos:
- - repo: local
+- repo: https://github.com/python-poetry/poetry
+  rev: 2.3.2
+  hooks:
 
-   hooks:
+  # Check the content of the pyproject.toml file and its consistency with the poetry.lock file
+  - id: poetry-check
+    name: Poetry check
 
-   # Code formatting
+- repo: local
+  hooks:
+  # Code formatting
 
-   - id: ruff-format
-     name: ruff-format
-     description: Python code formatting.
-     language: python
-     entry: ruff format
-     types: [python]
+  - id: format
+    name: Formatting
+    description: Code formatting.
+    language: python
+    entry: poetry run ruff format
+    types: [python]
 
-   - id: ruff check
-     name: ruff check
-     language: python
-     entry: ruff check .
-     args: [--fix, --exit-non-zero-on-fix]
-     types: [python]
+  - id: linting
+    name: Linting
+    description: Code linting.
+    language: python
+    entry: poetry run ruff check --fix
+    types: [python]
 
-   # Code analysis
+  # Code analysis
 
-   - id: mypy
-     name: mypy
-     description: Performs static type checking of source code written in Python.
-     language: python
-     entry: mypy
-     types: [python]
-     pass_filenames: false
+  - id: type-checking
+    name: Type checking
+    description: Performs static type checking of source code.
+    language: python
+    entry: poetry run mypy
+    types: [python]
+    pass_filenames: false
 
-   - id: pylint
-     name: pylint
-     description: Performs static analysis of source code written in Python.
-     language: python
-     entry: pylint
-     types: [python]
+  # Tests
 
-    # Local tests
-
-   - id: pytest
-     name: pytest
-     language: python
-     entry: pytest
-     types: [python]
-     pass_filenames: false
-
-   - id: pytest-cov
-     name: pytest-cov
-     stages: [pre-push]
-     language: python
-     entry: pytest
-     types: [python]
-     pass_filenames: false
+  - id: tests
+    name: Tests
+    stages: [pre-push]
+    language: system
+    entry: poetry run pytest --cov
+    types: [python]
+    pass_filenames: false

@@ -1,0 +1,6 @@
+#!/bin/bash
+
+set -euo pipefail
+
+echo "██████████████████████████████  mypy  ██████████████████████████████"
+poetry run mypy src/trevell/apps/api

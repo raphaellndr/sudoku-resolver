@@ -1,11 +1,14 @@
+"""Module defining a Sudoku and its solving methods."""
+
 from pathlib import Path
 
 import numpy as np
-from numpy import typing as npt
 
-from .backtracking import backtracking
-from .exceptions import ConsistencyError
+from .algorithms import SolverConfig, backtracking
+from .exceptions import ConsistencyError, UnsolvableSudokuError
 from .grid import Grid
+
+__all__ = ["Sudoku"]
 
 
 class Sudoku:
@@ -18,13 +21,15 @@ class Sudoku:
         :param filepath: Path to the file containing the Sudoku grid.
         """
         if values is not None:
+            values = values.replace(".", "0")
             self._values = np.array(list(values), dtype=np.uint8).reshape(9, 9)
         elif filepath is not None:
             if isinstance(filepath, str):
                 filepath = Path(filepath)
             self._values = self._parse_file(filepath)
         else:
-            raise ValueError("Either values or filepath must be provided")
+            error_msg = "Either values or filepath must be provided"
+            raise ValueError(error_msg)
 
         self._grid = Grid(self._values)
 
@@ -51,7 +56,7 @@ class Sudoku:
         """
         return cls(values=values)
 
-    def _parse_file(self, filepath: Path) -> npt.NDArray[np.uint8]:
+    def _parse_file(self, filepath: Path) -> np.ndarray[tuple[int, int], np.dtype[np.uint8]]:
         """Gets values contained in raw file.
 
         Each dot is converted to a 0.
@@ -68,15 +73,16 @@ class Sudoku:
         if array.shape != (9, 9):
             error_message = "Invalid Sudoku file"
             raise ValueError(error_message)
-        return array
+        return array.reshape(9, 9)
 
-    def solve(self) -> None:
-        """Calls backtracking algorithm to solve the sudoku."""
-        backtracking(
-            grid=self._grid,
-            domains=self._grid.domains,
-            initial_domains=self._grid.initial_domains,
-        )
+    def solve(self, config: SolverConfig | None = None) -> None:
+        """Solves the sudoku in place with a backtracking search.
+
+        :param config: solving techniques to use; defaults to all enabled.
+        :raises UnsolvableSudokuError: when the sudoku admits no solution.
+        """
+        if not backtracking(grid=self._grid, config=config):
+            raise UnsolvableSudokuError
 
     def check_consistency(self) -> bool:
         """Checks if the sudoku is consistent.
@@ -87,7 +93,7 @@ class Sudoku:
         for index in self.grid.assigned_values_indexes:
             value = self.grid.get_value(index)
             if not self.grid.check_constraints(value=value, value_index=index):
-                raise ConsistencyError(value_index=index)  # type:ignore
+                raise ConsistencyError(value_index=index)
         return True
 
     def humanize(self) -> str:
@@ -133,4 +139,5 @@ class Sudoku:
             f.write(formatted)
 
     def __str__(self) -> str:
+        """Returns the humanized grid."""
         return self.humanize()

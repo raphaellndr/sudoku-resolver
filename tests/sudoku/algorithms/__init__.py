@@ -1,0 +1,1 @@
+"""Algorithms tests package."""

@@ -1,11 +1,16 @@
 """Sudoku tests module."""
 
+from pathlib import Path
+
 import numpy as np
 import pytest
 
-from sudoku_resolver.exceptions import ConsistencyError
+from sudoku_resolver.algorithms import SolverConfig
+from sudoku_resolver.exceptions import ConsistencyError, UnsolvableSudokuError
 from sudoku_resolver.sudoku import Sudoku
-from tests import SUDOKU_PATH
+from tests import DATA_DIR, SUDOKU_PATH
+
+UNSOLVABLE_SUDOKU = "12345678." + "." * 9 + ".......9." + "." * 54
 
 
 def test_initialize_values() -> None:
@@ -86,3 +91,49 @@ def test_humanize() -> None:
         "2 8 9 | 6 5 7 | 3 1 4\n"
         "4 6 7 | 3 9 1 | 5 2 8\n"
     )
+
+
+@pytest.mark.parametrize(
+    "puzzle_path",
+    sorted(DATA_DIR.rglob("*.txt")),
+    ids=lambda path: str(path.relative_to(DATA_DIR)),
+)
+def test_solve_data_puzzles(puzzle_path: Path) -> None:
+    sudoku = Sudoku.from_file(puzzle_path)
+    sudoku.solve()
+
+    assert sudoku.check_consistency()
+    assert "0" not in sudoku.to_string()
+
+
+@pytest.mark.parametrize(
+    "ac3,mrv,lcv",
+    [(ac3, mrv, lcv) for ac3 in (True, False) for mrv in (True, False) for lcv in (True, False)],
+)
+def test_solve_with_config(*, ac3: bool, mrv: bool, lcv: bool) -> None:
+    sudoku = Sudoku.from_file(SUDOKU_PATH)
+    sudoku.solve(SolverConfig(ac3=ac3, mrv=mrv, lcv=lcv))
+
+    assert sudoku.check_consistency()
+    assert "0" not in sudoku.to_string()
+
+
+@pytest.mark.parametrize(
+    "config",
+    [
+        SolverConfig(),
+        SolverConfig(ac3=False),
+    ],
+)
+def test_solve_unsolvable_sudoku(config: SolverConfig) -> None:
+    sudoku = Sudoku.from_string(UNSOLVABLE_SUDOKU)
+
+    with pytest.raises(UnsolvableSudokuError):
+        sudoku.solve(config)
+
+
+def test_from_string_with_dots() -> None:
+    dotted = ".2345678." + "." * 72
+    zeroed = "023456780" + "0" * 72
+
+    assert Sudoku.from_string(dotted).to_string() == zeroed
