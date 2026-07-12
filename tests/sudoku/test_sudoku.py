@@ -132,6 +132,24 @@ def test_solve_unsolvable_sudoku(config: SolverConfig) -> None:
         sudoku.solve(config)
 
 
+@pytest.mark.timeout(5)
+@pytest.mark.parametrize(
+    "values",
+    [
+        "1" + "0" * 80,  # single clue
+        "1" + "0" * 79 + "1",  # two clues top-left + bottom-right (previously hung)
+        "0" * 81,  # empty grid
+    ],
+    ids=["single-clue", "two-clue", "empty"],
+)
+def test_solve_underconstrained_terminates(values: str) -> None:
+    sudoku = Sudoku.from_string(values)
+    sudoku.solve()
+
+    assert sudoku.check_consistency()
+    assert "0" not in sudoku.to_string()
+
+
 def test_from_string_with_dots() -> None:
     dotted = ".2345678." + "." * 72
     zeroed = "023456780" + "0" * 72
